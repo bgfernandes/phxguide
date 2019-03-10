@@ -9,6 +9,14 @@ defmodule PhxguideWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :review_entitlement_checks do
+    # nothing, yet
+  end
+
+  pipeline :admin do
+    # nothing, yet
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -19,6 +27,19 @@ defmodule PhxguideWeb.Router do
     get "/", PageController, :index
     get "/hello", HelloController, :index
     get "/hello/:my_param", HelloController, :show
+
+    forward "/jobs", BackgroundJob.Plug, name: "Hello Phoenix"
+
+    scope "/reviews" do
+      pipe_through :review_entitlement_checks
+
+      resources "/", ReviewController
+    end
+  end
+
+  scope "/admin", PhxguideWeb.Admin, as: :admin do
+    pipe_through [:browser, :admin]
+    resources "/reviews", ReviewController
   end
 
   # Other scopes may use custom stacks.
