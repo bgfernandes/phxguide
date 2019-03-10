@@ -1,13 +1,13 @@
-defmodule PhxguideWeb.BackgroundJob.Plug do
+defmodule PhxguideWeb.Plugs.BackgroundJob do
   def init(opts), do: opts
   def call(conn, opts) do
     conn
     |> Plug.Conn.assign(:name, Keyword.get(opts, :name, "Background Job"))
-    |> PhxguideWeb.BackgroundJob.Router.call(opts)
+    |> PhxguideWeb.Plugs.BackgroundJob.Router.call(opts)
   end
 end
 
-defmodule PhxguideWeb.BackgroundJob.Router do
+defmodule PhxguideWeb.Plugs.BackgroundJob.Router do
   use Plug.Router
 
   plug :match

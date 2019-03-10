@@ -7,6 +7,7 @@ defmodule PhxguideWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug PhxguideWeb.Plugs.Locale, "en"
   end
 
   pipeline :review_entitlement_checks do
@@ -28,7 +29,7 @@ defmodule PhxguideWeb.Router do
     get "/hello", HelloController, :index
     get "/hello/:my_param", HelloController, :show
 
-    forward "/jobs", BackgroundJob.Plug, name: "Hello Phoenix"
+    forward "/jobs", Plugs.BackgroundJob, name: "Hello Phoenix"
 
     scope "/reviews" do
       pipe_through :review_entitlement_checks
