@@ -2,7 +2,7 @@ defmodule PhxguideWeb.Router do
   use PhxguideWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "text"]
     plug :fetch_session
     plug :fetch_flash
     plug :protect_from_forgery
@@ -26,6 +26,13 @@ defmodule PhxguideWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/nolayout", PageController, :index_no_layout
+    get "/admlayout", PageController, :index_adm_layout
+    get "/text/:id", PageController, :show_text
+    get "/json/:id", PageController, :show_json
+    get "/html/:id", PageController, :show_html
+    get "/plain/:id", PageController, :show_plain
+
     get "/hello", HelloController, :index
     get "/hello/:my_param", HelloController, :show
 
@@ -36,6 +43,15 @@ defmodule PhxguideWeb.Router do
 
       resources "/", ReviewController
     end
+
+    get "/redirect_test", PageController, :redirect_test
+    get "/unauthorized", PageController, :unauthorized_test
+    get "/notfound", PageController, :not_found_test
+  end
+
+  scope "/fakeauth", PhxguideWeb do
+    pipe_through [:browser, PhxguideWeb.FakeAuthorizerPlug]
+    get "/", PageController, :index
   end
 
   scope "/admin", PhxguideWeb.Admin, as: :admin do
